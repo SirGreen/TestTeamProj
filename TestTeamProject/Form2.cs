@@ -16,7 +16,7 @@ namespace TestTeamProject
         {
             InitializeComponent();
             Form1 form1 = new Form1();
-            form1.creatBtn(this);
+            //form1.creatBtn(this);
         }
 
     }
