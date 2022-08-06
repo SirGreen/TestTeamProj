@@ -53,7 +53,8 @@ namespace TestTeamProject
         {
             this.Hide();
             Form2 form2 = new Form2();
-            form2.Show();
+            form2.ShowDialog();
+            this.Show();
         }
 
         // Change Width --> New Bomb.maximum
