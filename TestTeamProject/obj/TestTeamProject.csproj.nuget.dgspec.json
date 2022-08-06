@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Khoa\\source\\repos\\TestTeamProject\\TestTeamProject\\TestTeamProject.csproj": {}
+    "C:\\Users\\dell\\source\\repos\\TestTeamProj\\TestTeamProject\\TestTeamProject.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Khoa\\source\\repos\\TestTeamProject\\TestTeamProject\\TestTeamProject.csproj": {
+    "C:\\Users\\dell\\source\\repos\\TestTeamProj\\TestTeamProject\\TestTeamProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Khoa\\source\\repos\\TestTeamProject\\TestTeamProject\\TestTeamProject.csproj",
+        "projectUniqueName": "C:\\Users\\dell\\source\\repos\\TestTeamProj\\TestTeamProject\\TestTeamProject.csproj",
         "projectName": "TestTeamProject",
-        "projectPath": "C:\\Users\\Khoa\\source\\repos\\TestTeamProject\\TestTeamProject\\TestTeamProject.csproj",
-        "packagesPath": "C:\\Users\\Khoa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Khoa\\source\\repos\\TestTeamProject\\TestTeamProject\\obj\\",
+        "projectPath": "C:\\Users\\dell\\source\\repos\\TestTeamProj\\TestTeamProject\\TestTeamProject.csproj",
+        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\dell\\source\\repos\\TestTeamProj\\TestTeamProject\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Khoa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

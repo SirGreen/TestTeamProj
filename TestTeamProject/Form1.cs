@@ -53,6 +53,11 @@ namespace TestTeamProject
         {
             this.Hide();
             Form2 form2 = new Form2();
+
+            form2.value1 = h;
+            form2.value2 = v;
+            form2.value3 = bomb;
+
             form2.ShowDialog();
             this.Show();
         }
