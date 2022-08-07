@@ -170,7 +170,8 @@ namespace TestTeamProject
                 }
             }
 
-            label2.Text = Time(hour) + ":" + Time(min) + ":" + Time(sec);
+            if (hour > 0) label2.Text = Time(hour) + ":" + Time(min) + ":" + Time(sec);
+            else label2.Text = Time(min) + ":" + Time(sec);
 
         }
 
