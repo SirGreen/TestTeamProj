@@ -16,6 +16,8 @@ namespace TestTeamProject
         ///khai bao bien
         static int maxh = 31, maxv = 31;
         public static int h, v, bomb;
+
+        static int fx, fy;
         static bool firstclick = false;
 
         static int[,] game = new int[maxh, maxv];
@@ -74,7 +76,7 @@ namespace TestTeamProject
                     btn.ForeColor = Color.Brown;
                     break;
                 case 6:
-                    btn.ForeColor = Color.Cyan;
+                    btn.ForeColor = Color.DarkOliveGreen;
                     break;
                 case 7:
                     btn.ForeColor = Color.Crimson;
@@ -92,7 +94,6 @@ namespace TestTeamProject
 
         private void BombCount(int x, int y)
         {
-            if (game[x, y] != -1) return;
             for (int i = 0; i < 8; i++)
             {
                 if (isValid(x, y, i) && game[x + dx[i], y + dy[i]] != -1)
@@ -116,6 +117,11 @@ namespace TestTeamProject
 
         private void Form2_Load(object sender, EventArgs e)
         {
+            ///timer Location
+
+            label1.Location = new Point(h * 50,0);
+            label2.Location = new Point(h * 50 + 25, 50);
+
             ///create Grid button
 
             for (int i = 0; i < h; i++)
@@ -128,6 +134,7 @@ namespace TestTeamProject
                     b[i, j].Location = new Point(i * 50, j * 50);
                     b[i, j].Height = 50;
                     b[i, j].Width = 50;
+                    b[i, j].Font = new Font(b[i, j].Font.Name, 10);
 
                     this.Controls.Add(b[i, j]);
 
@@ -136,6 +143,13 @@ namespace TestTeamProject
                 }
             }
 
+        }
+
+        int time = 0;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            time++;
+            label2.Text = time.ToString();
         }
 
         ///Show the number of bombs in each cell
@@ -206,12 +220,13 @@ namespace TestTeamProject
             x = rand.Next(0, h);
             y = rand.Next(0, v);
 
-            while (game[x, y] == -1)
+            while (game[x, y] == -1 || (x == fx && y == fy))
             {
                 x = rand.Next(0, h);
                 y = rand.Next(0, v);
             }
 
+            BombCount(x, y);
             game[x, y] = -1;
 
         }
@@ -243,19 +258,15 @@ namespace TestTeamProject
             {
                 firstclick = false;
 
-                game[x, y] = -1;
+                ///start timer
+                timer1.Enabled = true;
+
+                fx = x;
+                fy = y;
 
                 for (int i = 0; i < bomb; i++)
                 {
                     CreateBombLocation();
-                }
-
-                game[x, y] = 0;
-
-                for (int i = 0; i < h; i++)
-                {
-                    for (int j = 0; j < v; j++)
-                        BombCount(i, j);
                 }
             }
 
@@ -263,6 +274,7 @@ namespace TestTeamProject
             if (game[x, y] == -1)
             {
                 btn.Text = "B";
+                timer1.Enabled = false;
                 MessageBox.Show("Game Over");
                 Depict();
             }
