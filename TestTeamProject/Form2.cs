@@ -14,6 +14,7 @@ namespace TestTeamProject
     public partial class Form2 : Form
     {
         ///khai bao bien
+        #region Bien
         static int maxh = 31, maxv = 31;
         public static int h, v, bomb;
 
@@ -30,8 +31,11 @@ namespace TestTeamProject
 
         int[] dx = new int[8] { -1, -1, -1, 0, 1, 1, 1, 0 };
         int[] dy = new int[8] { -1, 0, 1, 1, 1, 0, -1, -1 };
+        bool[,] rightChk = new bool[maxh, maxv];
+        #endregion
 
         ///Truyen du lieu
+        #region Truyen du lieu
         public int value1
         {
             get { return h; }
@@ -49,6 +53,7 @@ namespace TestTeamProject
             get { return bomb; }
             set { bomb = value; }
         }
+        #endregion
 
         public Form2()
         {
@@ -119,7 +124,7 @@ namespace TestTeamProject
         {
             ///timer Location
 
-            label1.Location = new Point(h * 50,0);
+            label1.Location = new Point(h * 50, 0);
             label2.Location = new Point(h * 50 + 25, 50);
 
             ///create Grid button
@@ -135,10 +140,12 @@ namespace TestTeamProject
                     b[i, j].Height = 50;
                     b[i, j].Width = 50;
                     b[i, j].Font = new Font(b[i, j].Font.Name, 10);
+                    b[i, j].BackColor = Color.White;
 
                     this.Controls.Add(b[i, j]);
 
                     b[i, j].Click += Btn_Click;
+                    b[i, j].MouseDown += Btn_RightClick;
 
                 }
             }
@@ -279,6 +286,48 @@ namespace TestTeamProject
                 Depict();
             }
             else Loan(x, y);
+        }
+
+        private void Btn_RightClick(object? sender, MouseEventArgs e)
+        {
+            Button btn = sender as Button;
+
+            int x = 0, y = 0;
+
+            ///Xu li xau
+
+            string s = btn.Name, s1 = "";
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '_')
+                {
+                    x = Convert.ToInt32(s1);
+                    s1 = "";
+                }
+                else s1 += s[i];
+            }
+
+            y = Convert.ToInt32(s1);
+            // Right Click
+            if (btn.BackColor != Color.Silver)
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    if (rightChk[x,y] == false)
+                    {
+                        btn.BackColor = Color.OrangeRed;
+                        rightChk[x, y] = true;
+                        btn.Click -= Btn_Click;
+                    }
+                    else
+                    {
+                        btn.BackColor = Color.White;
+                        rightChk[x, y] = false;
+                        btn.Click += Btn_Click;
+                    }
+                }
+            }
         }
     }
 }
