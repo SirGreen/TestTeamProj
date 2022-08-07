@@ -124,8 +124,8 @@ namespace TestTeamProject
         {
             ///timer Location
 
-            label1.Location = new Point(h * 50, 0);
-            label2.Location = new Point(h * 50 + 25, 50);
+            label1.Location = new Point(h * 50,0);
+            label2.Location = new Point(h * 50, 50);
 
             ///create Grid button
 
@@ -152,11 +152,34 @@ namespace TestTeamProject
 
         }
 
-        int time = 0;
+        private string Time(int x)
+        {
+            string s = "";
+            if (x > 9) s = x.ToString();
+            else s = "0" + x.ToString();
+
+            return s;
+        }
+
+        int sec = 0, min = 0, hour = 0;
+
         private void timer1_Tick(object sender, EventArgs e)
         {
-            time++;
-            label2.Text = time.ToString();
+            sec++;
+            if(sec==60)
+            {
+                min++;
+                sec = 0;
+                if (min == 60)
+                {
+                    hour++;
+                    min = 0;
+                }
+            }
+
+            if (hour > 0) label2.Text = Time(hour) + ":" + Time(min) + ":" + Time(sec);
+            else label2.Text = Time(min) + ":" + Time(sec);
+
         }
 
         ///Show the number of bombs in each cell
