@@ -19,7 +19,9 @@ namespace TestTeamProject
         public static int h, v, bomb;
 
         static int fx, fy;
-        static bool firstclick = false;
+        int sec = 0, min = 0, hour = 0;
+
+        static bool firstclick = false, res = false;
 
         static int[,] game = new int[maxh, maxv];
 
@@ -57,8 +59,8 @@ namespace TestTeamProject
 
         public Form2()
         {
-            InitializeComponent();
             Initgame();
+            InitializeComponent();
         }
 
         private void ColorOfNum(Button btn, int cl)
@@ -110,6 +112,9 @@ namespace TestTeamProject
         {
             ///Init game
             firstclick = true;
+
+            sec = 0; min = 0; hour = 0;
+
             for (int i = 0; i < h; i++)
             {
                 for (int j = 0; j < v; j++)
@@ -120,13 +125,8 @@ namespace TestTeamProject
             }
         }
 
-        private void Form2_Load(object sender, EventArgs e)
+        private void Create()
         {
-            ///timer Location
-
-            label1.Location = new Point(h * 50,0);
-            label2.Location = new Point(h * 50, 50);
-
             ///create Grid button
 
             for (int i = 0; i < h; i++)
@@ -149,7 +149,27 @@ namespace TestTeamProject
 
                 }
             }
+        }
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            ///timer Location
 
+            label1.Location = new Point(h * 50, 0);
+            label2.Location = new Point(h * 50, 50);
+
+            ///Pause button Location
+
+            button1.Location = new Point(h * 50, (v - 3) * 50);
+
+            ///Menu button Location
+
+            button2.Location = new Point(h * 50, (v - 1) * 50);
+
+            ///Restart button Location
+
+            button3.Location = new Point(h * 50, (v - 2) * 50);
+
+            Create();
         }
 
         private string Time(int x)
@@ -160,8 +180,6 @@ namespace TestTeamProject
 
             return s;
         }
-
-        int sec = 0, min = 0, hour = 0;
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -180,6 +198,52 @@ namespace TestTeamProject
             if (hour > 0) label2.Text = Time(hour) + ":" + Time(min) + ":" + Time(sec);
             else label2.Text = Time(min) + ":" + Time(sec);
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            timer1.Stop();
+            this.Hide();
+
+            Form3 form3 = new Form3();
+            form3.ShowDialog();
+
+            this.Show();
+            timer1.Start();
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        void Restart()
+        {
+            res = true;
+
+            timer1.Stop();
+            sec = 0; min = 0; hour = 0;
+            label2.Text = "00:00";
+
+            ///Init IsVisit
+
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < v; j++)
+                {
+                    isVisit[i,j]=false;
+                    this.Controls.Remove(b[i, j]);
+                    rightChk[i, j] = false;
+                }
+            }
+
+            Create();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Restart();   
         }
 
         ///Show the number of bombs in each cell
@@ -268,8 +332,18 @@ namespace TestTeamProject
             {
                 b[x, y].Text = "B";
                 timer1.Enabled = false;
-                MessageBox.Show("Game Over");
+
                 Depict();
+
+                DialogResult result = MessageBox.Show("Game Over. Do you want to Restart?","Notifycation",
+                    MessageBoxButtons.YesNoCancel);
+
+                switch (result)
+                { 
+                    case DialogResult.Yes: Restart();
+                        break;
+                }
+
             }
             else Loan(x, y);
         }
@@ -312,7 +386,11 @@ namespace TestTeamProject
                     CreateBombLocation();
                 }
             }
-
+            else if (res)
+            {
+                timer1.Start(); //timer start after restart
+                res = false;
+            }
             GameOperation(x, y);
         }
 
@@ -321,6 +399,15 @@ namespace TestTeamProject
             Button btn = sender as Button;
 
             if (e.Button != MouseButtons.Right) return;
+            if(firstclick)
+            {
+                timer1.Start();
+            }
+            if(res)
+            {
+                timer1.Start();
+                res = false;
+            }
 
             int x = 0, y = 0;
 
