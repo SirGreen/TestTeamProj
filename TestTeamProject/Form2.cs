@@ -16,10 +16,10 @@ namespace TestTeamProject
         ///khai bao bien
         #region Bien
         static int maxh = 31, maxv = 31;
-        public static int h, v, bomb;
+        public static int h, v, bomb, winChk;
 
         static int fx, fy;
-        int sec = 0, min = 0, hour = 0;
+        int sec = 0, min = 0, hour = 0, flags = 0;
 
         static bool firstclick = false, res = false;
 
@@ -56,6 +56,7 @@ namespace TestTeamProject
             set { bomb = value; }
         }
         #endregion
+
 
         public Form2()
         {
@@ -169,6 +170,15 @@ namespace TestTeamProject
 
             button3.Location = new Point(h * 50, (v - 2) * 50);
 
+            // Bomb counter Location
+            label3.Location = new Point(h * 50, 100);
+            label4.Location = new Point(h * 50, 150);
+
+            // Set Value
+            flags = bomb;
+            label4.Text = flags.ToString();
+            winChk = h * v - bomb;
+
             Create();
         }
 
@@ -225,6 +235,9 @@ namespace TestTeamProject
             timer1.Stop();
             sec = 0; min = 0; hour = 0;
             label2.Text = "00:00";
+            flags = bomb;
+            label4.Text = flags.ToString();
+            winChk = h * v - bomb;
 
             ///Init IsVisit
 
@@ -253,7 +266,10 @@ namespace TestTeamProject
 
             isVisit[x, y] = true;
 
+            winChk--;
+
             b[x, y].BackColor = Color.Silver;
+
 
             if (game[x, y] != 0)
             {
@@ -270,9 +286,10 @@ namespace TestTeamProject
                         if (game[x + dx[i], y + dy[i]] != -1)
                         {
                             b[x + dx[i], y + dy[i]].BackColor = Color.Silver;
-
+                          
                             if (game[x + dx[i], y + dy[i]] != 0)
                             {
+                                if (!isVisit[x + dx[i], y + dy[i]]) winChk--;
                                 isVisit[x + dx[i], y + dy[i]] = true;
                                 ColorOfNum(b[x + dx[i], y + dy[i]], game[x + dx[i], y + dy[i]]);
                                 b[x + dx[i], y + dy[i]].Text = game[x + dx[i], y + dy[i]].ToString();
@@ -349,7 +366,28 @@ namespace TestTeamProject
                 }
 
             }
-            else Loan(x, y);
+            else
+            {
+                Loan(x, y);
+                if (winChk == 0)    // Win Game
+                {
+                    timer1.Enabled = false;
+                    Depict();
+
+                    DialogResult result = MessageBox.Show("Congratulations! Do you want to start a New Game?", "Notification",
+                    MessageBoxButtons.YesNoCancel);
+
+                    switch (result)
+                    {
+                        case DialogResult.Yes:
+                            // Start New Game
+                            break;
+                        case DialogResult.No:
+                            this.Close();
+                            break;
+                    }
+                }
+            }
         }
 
         private void Btn_Click(object? sender, EventArgs e)
@@ -439,12 +477,18 @@ namespace TestTeamProject
                     btn.BackColor = Color.OrangeRed;
                     rightChk[x, y] = true;
                     btn.Click -= Btn_Click;
+
+                    flags--;
+                    label4.Text = flags.ToString();
                 }
                 else
                 {
                     btn.BackColor = Color.White;
                     rightChk[x, y] = false;
                     btn.Click += Btn_Click;
+
+                    flags++;
+                    label4.Text = flags.ToString();
                 }
 
             }
