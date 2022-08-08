@@ -199,7 +199,7 @@ namespace TestTeamProject
 
             for (int i = 0; i < 8; i++)
             {
-                if (isValid(x, y, i))
+                if (isValid(x, y, i) && !rightChk[x + dx[i], y + dy[i]])
                 {
                     if (game[x, y] == 0)
                     {
@@ -209,6 +209,7 @@ namespace TestTeamProject
 
                             if (game[x + dx[i], y + dy[i]] != 0)
                             {
+                                isVisit[x + dx[i], y + dy[i]] = true;
                                 ColorOfNum(b[x + dx[i], y + dy[i]], game[x + dx[i], y + dy[i]]);
                                 b[x + dx[i], y + dy[i]].Text = game[x + dx[i], y + dy[i]].ToString();
                             }
@@ -261,6 +262,18 @@ namespace TestTeamProject
 
         }
 
+        private void GameOperation(int x, int y)
+        {
+            if (game[x, y] == -1) ///Lose Game
+            {
+                b[x, y].Text = "B";
+                timer1.Enabled = false;
+                MessageBox.Show("Game Over");
+                Depict();
+            }
+            else Loan(x, y);
+        }
+
         private void Btn_Click(object? sender, EventArgs e)
         {
             Button btn = sender as Button;
@@ -300,20 +313,14 @@ namespace TestTeamProject
                 }
             }
 
-
-            if (game[x, y] == -1)
-            {
-                btn.Text = "B";
-                timer1.Enabled = false;
-                MessageBox.Show("Game Over");
-                Depict();
-            }
-            else Loan(x, y);
+            GameOperation(x, y);
         }
 
         private void Btn_RightClick(object? sender, MouseEventArgs e)
         {
             Button btn = sender as Button;
+
+            if (e.Button != MouseButtons.Right) return;
 
             int x = 0, y = 0;
 
@@ -332,23 +339,44 @@ namespace TestTeamProject
             }
 
             y = Convert.ToInt32(s1);
-            // Right Click
+
+            // Right Click To Open Flag 
             if (btn.BackColor != Color.Silver)
             {
-                if (e.Button == MouseButtons.Right)
+                if (rightChk[x,y] == false)
                 {
-                    if (rightChk[x,y] == false)
+                    btn.BackColor = Color.OrangeRed;
+                    rightChk[x, y] = true;
+                    btn.Click -= Btn_Click;
+                }
+                else
+                {
+                    btn.BackColor = Color.White;
+                    rightChk[x, y] = false;
+                    btn.Click += Btn_Click;
+                }
+      
+            }
+            else /// Right Click To Open Remaining Cells
+            {
+                ///Check for enough flags
+
+                int flag = 0;
+                for (int i = 0; i < 8; i++)
+                {
+                    if (isValid(x, y, i) && rightChk[x + dx[i], y + dy[i]]) flag++;
+                }
+
+                ///Open cells
+                
+                if(flag == game[x,y])
+                {
+                    for (int i = 0; i < 8; i++) 
                     {
-                        btn.BackColor = Color.OrangeRed;
-                        rightChk[x, y] = true;
-                        btn.Click -= Btn_Click;
-                    }
-                    else
-                    {
-                        btn.BackColor = Color.White;
-                        rightChk[x, y] = false;
-                        btn.Click += Btn_Click;
-                    }
+                        if (isValid(x, y, i) && !isVisit[x + dx[i], y + dy[i]] 
+                            && !rightChk[x + dx[i],y+dy[i]]) 
+                            GameOperation(x + dx[i], y + dy[i]);
+                    }    
                 }
             }
         }
