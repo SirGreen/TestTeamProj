@@ -184,7 +184,7 @@ namespace TestTeamProject
         private void timer1_Tick(object sender, EventArgs e)
         {
             sec++;
-            if(sec==60)
+            if (sec == 60)
             {
                 min++;
                 sec = 0;
@@ -232,7 +232,7 @@ namespace TestTeamProject
             {
                 for (int j = 0; j < v; j++)
                 {
-                    isVisit[i,j]=false;
+                    isVisit[i, j] = false;
                     this.Controls.Remove(b[i, j]);
                     rightChk[i, j] = false;
                 }
@@ -243,7 +243,7 @@ namespace TestTeamProject
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Restart();   
+            Restart();
         }
 
         ///Show the number of bombs in each cell
@@ -335,14 +335,16 @@ namespace TestTeamProject
 
                 Depict();
 
-                DialogResult result = MessageBox.Show("Game Over. Do you want to Restart?","Notification",
+                DialogResult result = MessageBox.Show("Game Over. Do you want to Restart?", "Notification",
                     MessageBoxButtons.YesNoCancel);
 
                 switch (result)
-                { 
-                    case DialogResult.Yes: Restart();
+                {
+                    case DialogResult.Yes:
+                        Restart();
                         break;
-                    case DialogResult.No: this.Close();
+                    case DialogResult.No:
+                        this.Close();
                         break;
                 }
 
@@ -401,11 +403,11 @@ namespace TestTeamProject
             Button btn = sender as Button;
 
             if (e.Button != MouseButtons.Right) return;
-            if(firstclick)
+            if (firstclick)
             {
                 timer1.Start();
             }
-            if(res)
+            if (res)
             {
                 timer1.Start();
                 res = false;
@@ -432,7 +434,7 @@ namespace TestTeamProject
             // Right Click To Open Flag 
             if (btn.BackColor != Color.Silver)
             {
-                if (rightChk[x,y] == false)
+                if (rightChk[x, y] == false)
                 {
                     btn.BackColor = Color.OrangeRed;
                     rightChk[x, y] = true;
@@ -444,7 +446,7 @@ namespace TestTeamProject
                     rightChk[x, y] = false;
                     btn.Click += Btn_Click;
                 }
-      
+
             }
             else /// Right Click To Open Remaining Cells
             {
@@ -457,15 +459,15 @@ namespace TestTeamProject
                 }
 
                 ///Open cells
-                
-                if(flag == game[x,y])
+
+                if (flag == game[x, y])
                 {
-                    for (int i = 0; i < 8; i++) 
+                    for (int i = 0; i < 8; i++)
                     {
-                        if (isValid(x, y, i) && !isVisit[x + dx[i], y + dy[i]] 
-                            && !rightChk[x + dx[i],y+dy[i]]) 
+                        if (isValid(x, y, i) && !isVisit[x + dx[i], y + dy[i]]
+                            && !rightChk[x + dx[i], y + dy[i]])
                             GameOperation(x + dx[i], y + dy[i]);
-                    }    
+                    }
                 }
             }
         }
