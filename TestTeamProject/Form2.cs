@@ -16,12 +16,12 @@ namespace TestTeamProject
         ///khai bao bien
         #region Bien
         static int maxh = 31, maxv = 31;
-        public static int h, v, bomb;
+        public static int h, v, bomb, winChk;
 
         static int fx, fy;
-        int sec = 0, min = 0, hour = 0;
+        int sec = 0, min = 0, hour = 0, flags = 0;
 
-        static bool firstclick = false, res = false;
+        static bool firstclick = false, res = false, menu = false;
 
         static int[,] game = new int[maxh, maxv];
 
@@ -34,6 +34,8 @@ namespace TestTeamProject
         int[] dx = new int[8] { -1, -1, -1, 0, 1, 1, 1, 0 };
         int[] dy = new int[8] { -1, 0, 1, 1, 1, 0, -1, -1 };
         bool[,] rightChk = new bool[maxh, maxv];
+
+        EventArgs agrs;
         #endregion
 
         ///Truyen du lieu
@@ -55,11 +57,24 @@ namespace TestTeamProject
             get { return bomb; }
             set { bomb = value; }
         }
+
+        public bool isRestart
+        {
+            get { return res; }
+            set { res = value; }
+        }
+
+        public bool isMenu
+        {
+            get { return menu; }
+            set { menu = value; }
+        }
+
         #endregion
+
 
         public Form2()
         {
-            Initgame();
             InitializeComponent();
         }
 
@@ -121,6 +136,7 @@ namespace TestTeamProject
                 {
                     game[i, j] = 0;
                     isVisit[i, j] = false;
+                    rightChk[i, j] = false;
                 }
             }
         }
@@ -144,7 +160,7 @@ namespace TestTeamProject
 
                     this.Controls.Add(b[i, j]);
 
-                    b[i, j].Click += Btn_Click;
+                    b[i, j].MouseDown += Btn_Click;
                     b[i, j].MouseDown += Btn_RightClick;
 
                 }
@@ -152,6 +168,8 @@ namespace TestTeamProject
         }
         private void Form2_Load(object sender, EventArgs e)
         {
+            Initgame();
+
             ///timer Location
 
             label1.Location = new Point(h * 50, 0);
@@ -168,6 +186,15 @@ namespace TestTeamProject
             ///Restart button Location
 
             button3.Location = new Point(h * 50, (v - 2) * 50);
+
+            // Bomb counter Location
+            label3.Location = new Point(h * 50, 100);
+            label4.Location = new Point(h * 50, 150);
+
+            // Set Value
+            flags = bomb;
+            label4.Text = flags.ToString();
+            winChk = h * v - bomb;
 
             Create();
         }
@@ -200,6 +227,7 @@ namespace TestTeamProject
 
         }
 
+        /// Pause/ Resume
         private void button1_Click(object sender, EventArgs e)
         {
             timer1.Stop();
@@ -218,31 +246,50 @@ namespace TestTeamProject
             this.Close();
         }
 
+        DateTime timespam;
+
         void Restart()
         {
+            if ((DateTime.Now - timespam).Ticks < 5000000) return;
+            timespam=DateTime.Now;
+
             res = true;
 
+            //reset timer
             timer1.Stop();
             sec = 0; min = 0; hour = 0;
             label2.Text = "00:00";
+            
+            //init value
 
-            ///Init IsVisit
+            flags = bomb;
+            label4.Text = flags.ToString();
+            winChk = h * v - bomb;
+
+            ///Init Restart
 
             for (int i = 0; i < h; i++)
             {
                 for (int j = 0; j < v; j++)
                 {
-                    isVisit[i, j] = false;
+                    //init button
+                    /*b[i, j].BackColor = Color.White;
+                    b[i, j].Text = "";
+                    b[i, j].ForeColor = Color.Black;*/
+
                     this.Controls.Remove(b[i, j]);
+                    
+                    //init array
+                    isVisit[i, j] = false;
                     rightChk[i, j] = false;
                 }
             }
-
             Create();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            agrs = e;
             Restart();
         }
 
@@ -253,7 +300,10 @@ namespace TestTeamProject
 
             isVisit[x, y] = true;
 
+            winChk--;
+
             b[x, y].BackColor = Color.Silver;
+
 
             if (game[x, y] != 0)
             {
@@ -270,9 +320,10 @@ namespace TestTeamProject
                         if (game[x + dx[i], y + dy[i]] != -1)
                         {
                             b[x + dx[i], y + dy[i]].BackColor = Color.Silver;
-
+                          
                             if (game[x + dx[i], y + dy[i]] != 0)
                             {
+                                if (!isVisit[x + dx[i], y + dy[i]]) winChk--;
                                 isVisit[x + dx[i], y + dy[i]] = true;
                                 ColorOfNum(b[x + dx[i], y + dy[i]], game[x + dx[i], y + dy[i]]);
                                 b[x + dx[i], y + dy[i]].Text = game[x + dx[i], y + dy[i]].ToString();
@@ -326,6 +377,33 @@ namespace TestTeamProject
 
         }
 
+        private void GameOption(bool WoL)
+        {
+            res = false; firstclick = false; menu = false;
+
+            Form4 form4 = new Form4();
+
+            form4.label1.Text = WoL ? "You Win" : "You Lose";
+
+            form4.ShowDialog();
+
+            if(res)
+            {
+                button3_Click(button3, agrs);
+            }
+
+            if (firstclick)
+            {
+                ///New Game
+            }
+
+            if (menu)
+            {
+                button2_Click(button2, agrs);
+            }
+
+        }
+
         private void GameOperation(int x, int y)
         {
             if (game[x, y] == -1) ///Lose Game
@@ -335,26 +413,40 @@ namespace TestTeamProject
 
                 Depict();
 
-                DialogResult result = MessageBox.Show("Game Over. Do you want to Restart?", "Notification",
-                    MessageBoxButtons.YesNoCancel);
-
-                switch (result)
-                {
-                    case DialogResult.Yes:
-                        Restart();
-                        break;
-                    case DialogResult.No:
-                        this.Close();
-                        break;
-                }
+                GameOption(false);
 
             }
-            else Loan(x, y);
+            else
+            {
+                Loan(x, y);
+                if (winChk == 0)    // Win Game
+                {
+                    timer1.Enabled = false;
+                    Depict();
+
+
+                    DialogResult result = MessageBox.Show("Congratulations! Do you want to start a New Game?", "Notification");
+
+                    /*switch (result)
+                    {
+                        case DialogResult.Yes:
+                            // Start New Game
+                            break;
+                        case DialogResult.No:
+                            this.Close();
+                            break;
+                    }*/
+
+                    GameOption(true);
+                }
+            }
         }
 
-        private void Btn_Click(object? sender, EventArgs e)
+        private void Btn_Click(object? sender, MouseEventArgs e)
         {
             Button btn = sender as Button;
+
+            if (e.Button != MouseButtons.Left) return;
 
             int x = 0, y = 0;
 
@@ -438,13 +530,19 @@ namespace TestTeamProject
                 {
                     btn.BackColor = Color.OrangeRed;
                     rightChk[x, y] = true;
-                    btn.Click -= Btn_Click;
+                    btn.MouseDown -= Btn_Click;
+
+                    flags--;
+                    label4.Text = flags.ToString();
                 }
                 else
                 {
                     btn.BackColor = Color.White;
                     rightChk[x, y] = false;
-                    btn.Click += Btn_Click;
+                    btn.MouseDown += Btn_Click;
+
+                    flags++;
+                    label4.Text = flags.ToString();
                 }
 
             }
@@ -460,7 +558,7 @@ namespace TestTeamProject
 
                 ///Open cells
 
-                if (flag == game[x, y])
+                if (flag >= game[x, y])
                 {
                     for (int i = 0; i < 8; i++)
                     {
