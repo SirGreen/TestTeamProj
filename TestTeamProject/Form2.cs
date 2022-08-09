@@ -253,7 +253,6 @@ namespace TestTeamProject
         {
             if ((DateTime.Now - timespam).Ticks < 5000000) return;
             timespam=DateTime.Now;
-
             res = true;
             isLose = false;
 
@@ -287,13 +286,15 @@ namespace TestTeamProject
                 }
             }
             Create();
-
             this.Refresh();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private async void button3_Click(object sender, EventArgs e)
         {
+            button3.Enabled = false;
             Restart();
+            await Task.Delay(444);
+            button3.Enabled = true;
         }
 
         ///Show the number of bombs in each cell
