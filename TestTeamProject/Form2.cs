@@ -21,7 +21,7 @@ namespace TestTeamProject
         static int fx, fy;
         int sec = 0, min = 0, hour = 0, flags = 0;
 
-        static bool firstclick = false, res = false, menu = false;
+        static bool firstclick = false, res = false, menu = false, isLose = false;
 
         static int[,] game = new int[maxh, maxv];
 
@@ -35,7 +35,6 @@ namespace TestTeamProject
         int[] dy = new int[8] { -1, 0, 1, 1, 1, 0, -1, -1 };
         bool[,] rightChk = new bool[maxh, maxv];
 
-        EventArgs agrs;
         #endregion
 
         ///Truyen du lieu
@@ -127,6 +126,8 @@ namespace TestTeamProject
         {
             ///Init game
             firstclick = true;
+
+            isLose = false;
 
             sec = 0; min = 0; hour = 0;
 
@@ -254,6 +255,7 @@ namespace TestTeamProject
             timespam=DateTime.Now;
 
             res = true;
+            isLose = false;
 
             //reset timer
             timer1.Stop();
@@ -285,11 +287,12 @@ namespace TestTeamProject
                 }
             }
             Create();
+
+            this.Refresh();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            agrs = e;
             Restart();
         }
 
@@ -379,7 +382,6 @@ namespace TestTeamProject
 
         private void GameOption(bool WoL)
         {
-            res = false; firstclick = false; menu = false;
 
             Form4 form4 = new Form4();
 
@@ -389,7 +391,7 @@ namespace TestTeamProject
 
             if(res)
             {
-                button3_Click(button3, agrs);
+                Restart();
             }
 
             if (firstclick)
@@ -399,46 +401,51 @@ namespace TestTeamProject
 
             if (menu)
             {
-                button2_Click(button2, agrs);
+                this.Close();
             }
 
+        }
+
+        private void Lose()
+        {
+            timer1.Enabled = false;
+
+            Depict();
+
+            GameOption(false);
+        }
+
+        private void Win()
+        {
+            timer1.Enabled = false;
+            Depict();
+
+
+            DialogResult result = MessageBox.Show("Congratulations! Do you want to start a New Game?", "Notification");
+
+            /*switch (result)
+            {
+                case DialogResult.Yes:
+                    // Start New Game
+                    break;
+                case DialogResult.No:
+                    this.Close();
+                    break;
+            }*/
+
+            GameOption(true);
+            
         }
 
         private void GameOperation(int x, int y)
         {
             if (game[x, y] == -1) ///Lose Game
             {
-                b[x, y].Text = "B";
-                timer1.Enabled = false;
-
-                Depict();
-
-                GameOption(false);
-
+                isLose = true;
             }
             else
             {
                 Loan(x, y);
-                if (winChk == 0)    // Win Game
-                {
-                    timer1.Enabled = false;
-                    Depict();
-
-
-                    DialogResult result = MessageBox.Show("Congratulations! Do you want to start a New Game?", "Notification");
-
-                    /*switch (result)
-                    {
-                        case DialogResult.Yes:
-                            // Start New Game
-                            break;
-                        case DialogResult.No:
-                            this.Close();
-                            break;
-                    }*/
-
-                    GameOption(true);
-                }
             }
         }
 
@@ -488,6 +495,9 @@ namespace TestTeamProject
                 res = false;
             }
             GameOperation(x, y);
+
+            if (winChk == 0) Win();
+            else if (isLose) Lose();
         }
 
         private void Btn_RightClick(object? sender, MouseEventArgs e)
@@ -564,7 +574,20 @@ namespace TestTeamProject
                     {
                         if (isValid(x, y, i) && !isVisit[x + dx[i], y + dy[i]]
                             && !rightChk[x + dx[i], y + dy[i]])
+                        {
                             GameOperation(x + dx[i], y + dy[i]);
+                            
+                            if (winChk == 0)    // Win Game
+                            {
+                                Win();
+                                break;
+                            }
+                            else if(isLose)
+                            {
+                                Lose();
+                                break;
+                            }
+                        }
                     }
                 }
             }
