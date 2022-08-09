@@ -21,7 +21,7 @@ namespace TestTeamProject
         static int fx, fy;
         int sec = 0, min = 0, hour = 0, flags = 0;
 
-        static bool firstclick = false, res = false;
+        static bool firstclick = false, res = false, menu = false, isLose = false;
 
         static int[,] game = new int[maxh, maxv];
 
@@ -34,6 +34,7 @@ namespace TestTeamProject
         int[] dx = new int[8] { -1, -1, -1, 0, 1, 1, 1, 0 };
         int[] dy = new int[8] { -1, 0, 1, 1, 1, 0, -1, -1 };
         bool[,] rightChk = new bool[maxh, maxv];
+
         #endregion
 
         ///Truyen du lieu
@@ -55,12 +56,24 @@ namespace TestTeamProject
             get { return bomb; }
             set { bomb = value; }
         }
+
+        public bool isRestart
+        {
+            get { return res; }
+            set { res = value; }
+        }
+
+        public bool isMenu
+        {
+            get { return menu; }
+            set { menu = value; }
+        }
+
         #endregion
 
 
         public Form2()
         {
-            Initgame();
             InitializeComponent();
         }
 
@@ -114,6 +127,8 @@ namespace TestTeamProject
             ///Init game
             firstclick = true;
 
+            isLose = false;
+
             sec = 0; min = 0; hour = 0;
 
             for (int i = 0; i < h; i++)
@@ -122,6 +137,7 @@ namespace TestTeamProject
                 {
                     game[i, j] = 0;
                     isVisit[i, j] = false;
+                    rightChk[i, j] = false;
                 }
             }
         }
@@ -145,7 +161,7 @@ namespace TestTeamProject
 
                     this.Controls.Add(b[i, j]);
 
-                    b[i, j].Click += Btn_Click;
+                    b[i, j].MouseDown += Btn_Click;
                     b[i, j].MouseDown += Btn_RightClick;
 
                 }
@@ -153,6 +169,8 @@ namespace TestTeamProject
         }
         private void Form2_Load(object sender, EventArgs e)
         {
+            Initgame();
+
             ///timer Location
 
             label1.Location = new Point(h * 50, 0);
@@ -210,6 +228,7 @@ namespace TestTeamProject
 
         }
 
+        /// Pause/ Resume
         private void button1_Click(object sender, EventArgs e)
         {
             timer1.Stop();
@@ -228,30 +247,48 @@ namespace TestTeamProject
             this.Close();
         }
 
+        DateTime timespam;
+
         void Restart()
         {
-            res = true;
+            if ((DateTime.Now - timespam).Ticks < 5000000) return;
+            timespam=DateTime.Now;
 
+            res = true;
+            isLose = false;
+
+            //reset timer
             timer1.Stop();
             sec = 0; min = 0; hour = 0;
             label2.Text = "00:00";
+            
+            //init value
+
             flags = bomb;
             label4.Text = flags.ToString();
             winChk = h * v - bomb;
 
-            ///Init IsVisit
+            ///Init Restart
 
             for (int i = 0; i < h; i++)
             {
                 for (int j = 0; j < v; j++)
                 {
-                    isVisit[i, j] = false;
+                    //init button
+                    /*b[i, j].BackColor = Color.White;
+                    b[i, j].Text = "";
+                    b[i, j].ForeColor = Color.Black;*/
+
                     this.Controls.Remove(b[i, j]);
+                    
+                    //init array
+                    isVisit[i, j] = false;
                     rightChk[i, j] = false;
                 }
             }
-
             Create();
+
+            this.Refresh();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -343,56 +380,80 @@ namespace TestTeamProject
 
         }
 
+        private void GameOption(bool WoL)
+        {
+
+            Form4 form4 = new Form4();
+
+            form4.label1.Text = WoL ? "You Win" : "You Lose";
+
+            form4.ShowDialog();
+
+            if(res)
+            {
+                Restart();
+            }
+
+            if (firstclick)
+            {
+                ///New Game
+            }
+
+            if (menu)
+            {
+                this.Close();
+            }
+
+        }
+
+        private void Lose()
+        {
+            timer1.Enabled = false;
+
+            Depict();
+
+            GameOption(false);
+        }
+
+        private void Win()
+        {
+            timer1.Enabled = false;
+            Depict();
+
+
+            DialogResult result = MessageBox.Show("Congratulations! Do you want to start a New Game?", "Notification");
+
+            /*switch (result)
+            {
+                case DialogResult.Yes:
+                    // Start New Game
+                    break;
+                case DialogResult.No:
+                    this.Close();
+                    break;
+            }*/
+
+            GameOption(true);
+            
+        }
+
         private void GameOperation(int x, int y)
         {
             if (game[x, y] == -1) ///Lose Game
             {
-                b[x, y].Text = "B";
-                timer1.Enabled = false;
-
-                Depict();
-
-                DialogResult result = MessageBox.Show("Game Over. Do you want to Restart?", "Notification",
-                    MessageBoxButtons.YesNoCancel);
-
-                switch (result)
-                {
-                    case DialogResult.Yes:
-                        Restart();
-                        break;
-                    case DialogResult.No:
-                        this.Close();
-                        break;
-                }
-
+                isLose = true;
             }
             else
             {
                 Loan(x, y);
-                if (winChk == 0)    // Win Game
-                {
-                    timer1.Enabled = false;
-                    Depict();
-
-                    DialogResult result = MessageBox.Show("Congratulations! Do you want to start a New Game?", "Notification",
-                    MessageBoxButtons.YesNoCancel);
-
-                    switch (result)
-                    {
-                        case DialogResult.Yes:
-                            // Start New Game
-                            break;
-                        case DialogResult.No:
-                            this.Close();
-                            break;
-                    }
-                }
             }
         }
 
-        private void Btn_Click(object? sender, EventArgs e)
+        private void Btn_Click(object? sender, MouseEventArgs e)
         {
             Button btn = sender as Button;
+
+            if (e.Button != MouseButtons.Left) return;
 
             int x = 0, y = 0;
 
@@ -434,6 +495,9 @@ namespace TestTeamProject
                 res = false;
             }
             GameOperation(x, y);
+
+            if (winChk == 0) Win();
+            else if (isLose) Lose();
         }
 
         private void Btn_RightClick(object? sender, MouseEventArgs e)
@@ -476,7 +540,7 @@ namespace TestTeamProject
                 {
                     btn.BackColor = Color.OrangeRed;
                     rightChk[x, y] = true;
-                    btn.Click -= Btn_Click;
+                    btn.MouseDown -= Btn_Click;
 
                     flags--;
                     label4.Text = flags.ToString();
@@ -485,7 +549,7 @@ namespace TestTeamProject
                 {
                     btn.BackColor = Color.White;
                     rightChk[x, y] = false;
-                    btn.Click += Btn_Click;
+                    btn.MouseDown += Btn_Click;
 
                     flags++;
                     label4.Text = flags.ToString();
@@ -504,13 +568,26 @@ namespace TestTeamProject
 
                 ///Open cells
 
-                if (flag == game[x, y])
+                if (flag >= game[x, y])
                 {
                     for (int i = 0; i < 8; i++)
                     {
                         if (isValid(x, y, i) && !isVisit[x + dx[i], y + dy[i]]
                             && !rightChk[x + dx[i], y + dy[i]])
+                        {
                             GameOperation(x + dx[i], y + dy[i]);
+                            
+                            if (winChk == 0)    // Win Game
+                            {
+                                Win();
+                                break;
+                            }
+                            else if(isLose)
+                            {
+                                Lose();
+                                break;
+                            }
+                        }
                     }
                 }
             }
