@@ -402,6 +402,7 @@ namespace TestTeamProject
 
             if (menu)
             {
+                menu = false;
                 this.Close();
             }
 
