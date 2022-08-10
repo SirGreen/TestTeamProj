@@ -165,7 +165,7 @@ namespace TestTeamProject
                     b[i, j].Font = new Font(b[i, j].Font.Name, 10);
                     b[i, j].BackColor = Color.White;
 
-                    this.Controls.Add(b[i, j]);
+                    panel1.Controls.Add(b[i, j]);
 
                     b[i, j].MouseDown += Btn_Click;
                     b[i, j].MouseDown += Btn_RightClick;
@@ -179,27 +179,27 @@ namespace TestTeamProject
 
             ///timer Location
 
-            label1.Location = new Point(h * 50, 0);
-            label2.Location = new Point(h * 50, 50);
+            label1.Location = new Point(h*50+25, 0);
+            label2.Location = new Point(h*50+25, 50);
+
+            // Bomb counter Location
+            label3.Location = new Point(h*50+25, 100);
+            label4.Location = new Point(h*50+25, 150);
 
             ///Pause button Location
 
-            button1.Location = new Point(h * 50, (v - 4) * 50);
+            button1.Location = new Point(h*50+25, 200);
 
             ///Menu button Location
 
-            button2.Location = new Point(h * 50, (v - 1) * 50);
+            button2.Location = new Point(h*50+25, 250);
 
             ///Restart button Location
 
-            button3.Location = new Point(h * 50, (v - 3) * 50);
+            button3.Location = new Point(h*50+25, 350);
 
             ///New Game button Location
-            button4.Location = new Point(h * 50, (v - 2) * 50);
-
-            // Bomb counter Location
-            label3.Location = new Point(h * 50, 100);
-            label4.Location = new Point(h * 50, 150);
+            button4.Location = new Point(h*50+25, 300);
 
             // Set Value
             flags = bomb;
@@ -287,7 +287,7 @@ namespace TestTeamProject
                     b[i, j].Text = "";
                     b[i, j].ForeColor = Color.Black;*/
 
-                    this.Controls.Remove(b[i, j]);
+                    panel1.Controls.Remove(b[i, j]);
                     
                     //init array
                     isVisit[i, j] = false;
@@ -323,7 +323,7 @@ namespace TestTeamProject
                     game[i, j] = 0;
                     isVisit[i, j] = false;
                     rightChk[i, j] = false;
-                    this.Controls.Remove(b[i, j]);
+                    panel1.Controls.Remove(b[i, j]);
                 }
             }
             Create();
