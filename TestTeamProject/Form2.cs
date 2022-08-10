@@ -69,6 +69,12 @@ namespace TestTeamProject
             set { menu = value; }
         }
 
+        public bool isNewGm
+        {
+            get { return isNewGm; }
+            set { firstclick = value; }
+        }
+
         #endregion
 
 
@@ -178,7 +184,7 @@ namespace TestTeamProject
 
             ///Pause button Location
 
-            button1.Location = new Point(h * 50, (v - 3) * 50);
+            button1.Location = new Point(h * 50, (v - 4) * 50);
 
             ///Menu button Location
 
@@ -186,7 +192,10 @@ namespace TestTeamProject
 
             ///Restart button Location
 
-            button3.Location = new Point(h * 50, (v - 2) * 50);
+            button3.Location = new Point(h * 50, (v - 3) * 50);
+
+            ///New Game button Location
+            button4.Location = new Point(h * 50, (v - 2) * 50);
 
             // Bomb counter Location
             label3.Location = new Point(h * 50, 100);
@@ -289,12 +298,52 @@ namespace TestTeamProject
             this.Refresh();
         }
 
+        void NewGame()
+        {
+            if ((DateTime.Now - timespam).Ticks < 5000000) return;
+            timespam = DateTime.Now;
+            firstclick = true;
+            isLose = false;
+
+            //reset timer
+            timer1.Stop();
+            sec = 0; min = 0; hour = 0;
+            label2.Text = "00:00";
+
+            //init value
+            flags = bomb;
+            label4.Text = flags.ToString();
+            winChk = h * v - bomb;
+
+            //init New Game
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < v; j++)
+                {
+                    game[i, j] = 0;
+                    isVisit[i, j] = false;
+                    rightChk[i, j] = false;
+                    this.Controls.Remove(b[i, j]);
+                }
+            }
+            Create();
+            this.Refresh();
+        }
+
         private async void button3_Click(object sender, EventArgs e)
         {
             button3.Enabled = false;
             Restart();
             await Task.Delay(444);
             button3.Enabled = true;
+        }
+
+        private async void button4_Click(object sender, EventArgs e)
+        {
+            button4.Enabled = false;
+            NewGame();
+            await Task.Delay(444);
+            button4.Enabled = true;
         }
 
         ///Show the number of bombs in each cell
@@ -397,7 +446,7 @@ namespace TestTeamProject
 
             if (firstclick)
             {
-                ///New Game
+                NewGame();
             }
 
             if (menu)
@@ -420,20 +469,11 @@ namespace TestTeamProject
         private void Win()
         {
             timer1.Enabled = false;
+
+            flags = 0;
+            label4.Text = flags.ToString();
+
             Depict();
-
-
-            DialogResult result = MessageBox.Show("Congratulations! Do you want to start a New Game?", "Notification");
-
-            /*switch (result)
-            {
-                case DialogResult.Yes:
-                    // Start New Game
-                    break;
-                case DialogResult.No:
-                    this.Close();
-                    break;
-            }*/
 
             GameOption(true);
             
