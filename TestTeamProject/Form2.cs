@@ -162,7 +162,7 @@ namespace TestTeamProject
                     b[i, j].Location = new Point(i * 50, j * 50);
                     b[i, j].Height = 50;
                     b[i, j].Width = 50;
-                    b[i, j].Font = new Font(b[i, j].Font.Name, 10);
+                    b[i, j].Font = new Font(b[i, j].Font.Name, 10, FontStyle.Bold);
                     b[i, j].BackColor = Color.White;
 
                     panel1.Controls.Add(b[i, j]);
