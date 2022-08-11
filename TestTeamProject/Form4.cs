@@ -31,6 +31,10 @@ namespace TestTeamProject
         private void button1_Click(object sender, EventArgs e)
         {
             ///new game
+            Form2 form2 = new Form2();
+            form2.isNewGm = true;
+           
+            this.Close();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -39,6 +43,11 @@ namespace TestTeamProject
             form2.isMenu = true;
 
             this.Close();
+        }
+
+        private void Form4_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

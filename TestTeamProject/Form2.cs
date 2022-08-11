@@ -69,6 +69,12 @@ namespace TestTeamProject
             set { menu = value; }
         }
 
+        public bool isNewGm
+        {
+            get { return isNewGm; }
+            set { firstclick = value; }
+        }
+
         #endregion
 
 
@@ -159,7 +165,7 @@ namespace TestTeamProject
                     b[i, j].Font = new Font(b[i, j].Font.Name, 10);
                     b[i, j].BackColor = Color.White;
 
-                    this.Controls.Add(b[i, j]);
+                    panel1.Controls.Add(b[i, j]);
 
                     b[i, j].MouseDown += Btn_Click;
                     b[i, j].MouseDown += Btn_RightClick;
@@ -173,24 +179,27 @@ namespace TestTeamProject
 
             ///timer Location
 
-            label1.Location = new Point(h * 50, 0);
-            label2.Location = new Point(h * 50, 50);
+            label1.Location = new Point(h*50+25, 0);
+            label2.Location = new Point(h*50+25, 50);
+
+            // Bomb counter Location
+            label3.Location = new Point(h*50+25, 100);
+            label4.Location = new Point(h*50+25, 150);
 
             ///Pause button Location
 
-            button1.Location = new Point(h * 50, (v - 3) * 50);
+            button1.Location = new Point(h*50+25, 200);
 
             ///Menu button Location
 
-            button2.Location = new Point(h * 50, (v - 1) * 50);
+            button2.Location = new Point(h*50+25, 250);
 
             ///Restart button Location
 
-            button3.Location = new Point(h * 50, (v - 2) * 50);
+            button3.Location = new Point(h*50+25, 350);
 
-            // Bomb counter Location
-            label3.Location = new Point(h * 50, 100);
-            label4.Location = new Point(h * 50, 150);
+            ///New Game button Location
+            button4.Location = new Point(h*50+25, 300);
 
             // Set Value
             flags = bomb;
@@ -278,11 +287,43 @@ namespace TestTeamProject
                     b[i, j].Text = "";
                     b[i, j].ForeColor = Color.Black;*/
 
-                    this.Controls.Remove(b[i, j]);
+                    panel1.Controls.Remove(b[i, j]);
                     
                     //init array
                     isVisit[i, j] = false;
                     rightChk[i, j] = false;
+                }
+            }
+            Create();
+            this.Refresh();
+        }
+
+        void NewGame()
+        {
+            if ((DateTime.Now - timespam).Ticks < 5000000) return;
+            timespam = DateTime.Now;
+            firstclick = true;
+            isLose = false;
+
+            //reset timer
+            timer1.Stop();
+            sec = 0; min = 0; hour = 0;
+            label2.Text = "00:00";
+
+            //init value
+            flags = bomb;
+            label4.Text = flags.ToString();
+            winChk = h * v - bomb;
+
+            //init New Game
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < v; j++)
+                {
+                    game[i, j] = 0;
+                    isVisit[i, j] = false;
+                    rightChk[i, j] = false;
+                    panel1.Controls.Remove(b[i, j]);
                 }
             }
             Create();
@@ -295,6 +336,14 @@ namespace TestTeamProject
             Restart();
             await Task.Delay(444);
             button3.Enabled = true;
+        }
+
+        private async void button4_Click(object sender, EventArgs e)
+        {
+            button4.Enabled = false;
+            NewGame();
+            await Task.Delay(444);
+            button4.Enabled = true;
         }
 
         ///Show the number of bombs in each cell
@@ -397,7 +446,7 @@ namespace TestTeamProject
 
             if (firstclick)
             {
-                ///New Game
+                NewGame();
             }
 
             if (menu)
@@ -420,20 +469,11 @@ namespace TestTeamProject
         private void Win()
         {
             timer1.Enabled = false;
+
+            flags = 0;
+            label4.Text = flags.ToString();
+
             Depict();
-
-
-            DialogResult result = MessageBox.Show("Congratulations! Do you want to start a New Game?", "Notification");
-
-            /*switch (result)
-            {
-                case DialogResult.Yes:
-                    // Start New Game
-                    break;
-                case DialogResult.No:
-                    this.Close();
-                    break;
-            }*/
 
             GameOption(true);
             

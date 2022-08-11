@@ -37,6 +37,8 @@
             this.button3 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // timer1
@@ -71,7 +73,7 @@
             this.button1.Location = new System.Drawing.Point(598, 128);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(112, 34);
+            this.button1.Size = new System.Drawing.Size(118, 34);
             this.button1.TabIndex = 2;
             this.button1.Text = "Pause";
             this.button1.UseVisualStyleBackColor = true;
@@ -79,10 +81,10 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(620, 192);
+            this.button2.Location = new System.Drawing.Point(598, 211);
             this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(112, 34);
+            this.button2.Size = new System.Drawing.Size(118, 34);
             this.button2.TabIndex = 3;
             this.button2.Text = "Menu";
             this.button2.UseVisualStyleBackColor = true;
@@ -90,10 +92,10 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(642, 249);
+            this.button3.Location = new System.Drawing.Point(598, 266);
             this.button3.Margin = new System.Windows.Forms.Padding(2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(112, 34);
+            this.button3.Size = new System.Drawing.Size(118, 34);
             this.button3.TabIndex = 4;
             this.button3.Text = "Restart";
             this.button3.UseVisualStyleBackColor = true;
@@ -121,6 +123,26 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "0";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(598, 168);
+            this.button4.Margin = new System.Windows.Forms.Padding(4);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(118, 36);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "New Game";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.AutoSize = true;
+            this.panel1.Location = new System.Drawing.Point(12, 9);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(300, 150);
+            this.panel1.TabIndex = 8;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -128,6 +150,8 @@
             this.AutoScroll = true;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button3);
@@ -154,5 +178,7 @@
         private Button button3;
         private Label label3;
         private Label label4;
+        private Button button4;
+        private Panel panel1;
     }
 }
