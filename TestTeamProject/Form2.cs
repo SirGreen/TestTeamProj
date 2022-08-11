@@ -179,12 +179,12 @@ namespace TestTeamProject
 
             ///timer Location
 
-            label1.Location = new Point(h*50+25, 0);
-            label2.Location = new Point(h*50+25, 50);
+            label1.Location = new Point(h*50+25+42, 0);
+            label2.Location = new Point(h*50+25+41, 50);
 
             // Bomb counter Location
             label3.Location = new Point(h*50+25, 100);
-            label4.Location = new Point(h*50+25, 150);
+            label4.Location = new Point(h*50+25+60, 150);
 
             ///Pause button Location
 
