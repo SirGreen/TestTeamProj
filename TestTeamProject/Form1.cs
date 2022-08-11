@@ -21,7 +21,8 @@ namespace TestTeamProject
             h = 8; v = 8; bomb = 10;
             ChngValCus(h, v, bomb);
             NotEnbl();
-            
+            ClChng();
+            button1.BackColor = Color.PaleGreen;
         }
 
         // Intermediate Mode
@@ -30,6 +31,8 @@ namespace TestTeamProject
             h = 16; v = 16; bomb = 40;
             ChngValCus(h, v, bomb);
             NotEnbl();
+            ClChng();
+            button2.BackColor = Color.LightSkyBlue;
         }
         
         // Expert Mode
@@ -38,6 +41,8 @@ namespace TestTeamProject
             h = 30; v = 16; bomb = 99;
             ChngValCus(h, v, bomb);
             NotEnbl();
+            ClChng();
+            button3.BackColor = Color.Orange;
         }
 
         // Custom Mode
@@ -46,6 +51,8 @@ namespace TestTeamProject
             numericUpDown1.Enabled = true;
             numericUpDown2.Enabled = true;
             numericUpDown3.Enabled = true;
+            ClChng();
+            button4.BackColor = Color.Pink;
         }
 
         // Start Game
@@ -95,6 +102,14 @@ namespace TestTeamProject
             numericUpDown1.Value = a;
             numericUpDown2.Value = b;   
             numericUpDown3.Value = c;
+        }
+
+        private void ClChng()
+        {
+            button1.BackColor = SystemColors.InactiveCaption;
+            button2.BackColor = SystemColors.InactiveCaption;
+            button3.BackColor = SystemColors.InactiveCaption; 
+            button4.BackColor = SystemColors.InactiveCaption;
         }
     }
 }
