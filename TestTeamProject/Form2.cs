@@ -398,7 +398,12 @@ namespace TestTeamProject
             {
                 for (int j = 0; j < v; j++)
                 {
-                    if (game[i, j] == -1) b[i, j].Text = "B";
+                    if (game[i, j] == -1)
+                    {
+                        b[i, j].Text = "B";
+                        if (b[i, j].BackColor == Color.OrangeRed || winChk==0) 
+                            b[i, j].BackColor = Color.LightGreen;
+                    }
                     else
                     {
                         if (game[i, j] != 0)
@@ -483,6 +488,7 @@ namespace TestTeamProject
         {
             if (game[x, y] == -1) ///Lose Game
             {
+                b[x, y].BackColor = Color.Red;
                 isLose = true;
             }
             else
