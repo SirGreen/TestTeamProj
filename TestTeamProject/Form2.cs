@@ -17,6 +17,7 @@ namespace TestTeamProject
         #region Bien
         static int maxh = 31, maxv = 31;
         public static int h, v, bomb, winChk;
+        public string gmmd;
 
         static int fx, fy;
         int sec = 0, min = 0, hour = 0, flags = 0;
@@ -73,6 +74,12 @@ namespace TestTeamProject
         {
             get { return isNewGm; }
             set { firstclick = value; }
+        }
+
+        public string Gmmode
+        {
+            get { return gmmd; }
+            set { gmmd = value; }
         }
 
         #endregion
@@ -177,34 +184,40 @@ namespace TestTeamProject
         {
             Initgame();
 
+            // Game mode Location
+
+            label5.Location = new Point(h * 50 + 25, 0);
+            label6.Location = new Point(h * 50 + 25, 50);
+
             ///timer Location
 
-            label1.Location = new Point(h*50+25+42, 0);
-            label2.Location = new Point(h*50+25+41, 50);
+            label1.Location = new Point(h*50+25, 100);
+            label2.Location = new Point(h*50+25, 150);
 
             // Bomb counter Location
-            label3.Location = new Point(h*50+25, 100);
-            label4.Location = new Point(h*50+25+60, 150);
+            label3.Location = new Point(h*50+25, 200);
+            label4.Location = new Point(h*50+25, 250);
 
             ///Pause button Location
 
-            button1.Location = new Point(h*50+25, 200);
+            button1.Location = new Point(h*50+35, 300);
 
             ///Menu button Location
 
-            button2.Location = new Point(h*50+25, 250);
+            button2.Location = new Point(h*50+35, 450);
 
             ///Restart button Location
 
-            button3.Location = new Point(h*50+25, 350);
+            button3.Location = new Point(h*50+35, 400);
 
             ///New Game button Location
-            button4.Location = new Point(h*50+25, 300);
+            button4.Location = new Point(h*50+35, 350);
 
             // Set Value
             flags = bomb;
             label4.Text = flags.ToString();
             winChk = h * v - bomb;
+            label6.Text = gmmd;
 
             Create();
         }

@@ -14,11 +14,13 @@ namespace TestTeamProject
 
         // Khoi tao ban dau
         public int h = 8, v = 8, bomb = 10;
+        public string gmmd = "beginner";
 
         // Beginner Mode
         private void button1_Click(object sender, EventArgs e)
         {
             h = 8; v = 8; bomb = 10;
+            gmmd = button1.Text;
             ChngValCus(h, v, bomb);
             NotEnbl();
             ClChng();
@@ -29,6 +31,7 @@ namespace TestTeamProject
         private void button2_Click(object sender, EventArgs e)
         {
             h = 16; v = 16; bomb = 40;
+            gmmd = button2.Text;
             ChngValCus(h, v, bomb);
             NotEnbl();
             ClChng();
@@ -39,6 +42,7 @@ namespace TestTeamProject
         private void button3_Click(object sender, EventArgs e)
         {
             h = 30; v = 16; bomb = 99;
+            gmmd = button3.Text;
             ChngValCus(h, v, bomb);
             NotEnbl();
             ClChng();
@@ -48,6 +52,7 @@ namespace TestTeamProject
         // Custom Mode
         private void button4_Click(object sender, EventArgs e)
         {
+            gmmd = button4.Text;
             numericUpDown1.Enabled = true;
             numericUpDown2.Enabled = true;
             numericUpDown3.Enabled = true;
@@ -64,6 +69,7 @@ namespace TestTeamProject
             form2.value1 = h;
             form2.value2 = v;
             form2.value3 = bomb;
+            form2.Gmmode = gmmd;
 
             form2.ShowDialog();
             this.Show();
